@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minimal Webpage</title>
+    <!-- Tailwind CSS Script via CDN for simplicity -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Optional smooth scrolling for internal anchor links */
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body class="font-sans antialiased text-gray-800">
+    <!-- Sticky or Fixed Navbar -->
+    <nav
+      id="navbar"
+      class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm transition-colors duration-500"
+    >
+      <!-- Scroll Progress Bar -->
+      <div
+        id="progress-bar"
+        class="absolute top-0 left-0 h-1 bg-white w-0 z-[60] shadow-sm"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <!-- Left Side: 2 Letter Abbrev + Links -->
+          <div class="flex items-center space-x-8 text-white">
+            <span class="text-2xl font-bold tracking-tight">AB</span>
+            <div class="hidden md:flex space-x-4">
+              <a href="#section1" class="hover:text-black transition-colors"
+                >Home</a
+              >
+              <a href="#section2" class="hover:text-black transition-colors"
+                >About</a
+              >
+            </div>
+          </div>
+
+          <!-- Right Side: Links + 2 Letter Abbrev -->
+          <div class="flex items-center space-x-8">
+            <div class="hidden md:flex space-x-4">
+              <a href="#section3" class="hover:text-black transition-colors"
+                >Work</a
+              >
+              <a href="#section4" class="hover:text-black transition-colors"
+                >Contact</a
+              >
+            </div>
+            <span class="text-2xl font-bold tracking-tight">YZ</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Sections -->
+    <main>
+      <!-- Section 1 -->
+      <section
+        id="section1"
+        class="h-screen w-full flex flex-col items-center justify-center bg-gray-50"
+      >
+        <h1 class="text-5xl font-extrabold mb-4 text-gray-900">Section 1</h1>
+        <p class="text-lg text-gray-500 max-w-md text-center">
+          This is the first section of our minimal webpage, taking up full
+          viewport height.
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section
+        id="section2"
+        class="h-screen w-full flex flex-col items-center justify-center bg-white"
+      >
+        <h1 class="text-5xl font-extrabold mb-4 text-gray-900">Section 2</h1>
+        <p class="text-lg text-gray-500 max-w-md text-center">
+          Continuing the clean, simple design with alternating background
+          colors.
+        </p>
+      </section>
+
+      <!-- Section 3 -->
+      <section
+        id="section3"
+        class="h-screen w-full flex flex-col items-center justify-center bg-gray-50"
+      >
+        <h1 class="text-5xl font-extrabold mb-4 text-gray-900">Section 3</h1>
+        <p class="text-lg text-gray-500 max-w-md text-center">
+          Another 100vh section focused on minimalism and typography.
+        </p>
+
+        <!-- Element to be triggered by a single IntersectionObserver -->
+        <h2
+          id="hello-message"
+          class="mt-12 text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-orange-500 opacity-0 translate-y-16 transition-all duration-1000 ease-out"
+        >
+          HELLO THERE!
+        </h2>
+      </section>
+
+      <!-- Section 4 -->
+      <section
+        id="section4"
+        class="h-screen w-full flex flex-col items-center justify-center bg-white"
+      >
+        <h1 class="text-5xl font-extrabold mb-4 text-gray-900">Section 4</h1>
+        <p class="text-lg text-gray-500 max-w-md text-center">
+          The final viewing screen. Keep it basic, keep it beautiful.
+        </p>
+      </section>
+    </main>
+
+    <!-- Script to change navbar color on scroll -->
+    <script>
+      // 1. Select the navbar and all sections
+      const navbar = document.getElementById("navbar");
+      const sections = document.querySelectorAll("section");
+
+      // 2. Define the colors for the navbar using an object with section IDs as keys
+      const colors = {
+        section1: "purple", // darker gray (Tailwind gray-300)
+        section2: "blue", // darker blue (Tailwind blue-300)
+        section3: "red", // darker red (Tailwind red-300)
+        section4: "green", // darker green (Tailwind green-300)
+      };
+
+      // 3. Create an Intersection Observer to detect when sections are scrolled into view
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            // If the section is currently intersecting (visible)
+            if (entry.isIntersecting) {
+              // Get the ID of the current section
+              const sectionId = entry.target.id;
+
+              // Apply the corresponding color to the navbar's inline style if defined
+              if (colors[sectionId]) {
+                navbar.style.backgroundColor = colors[sectionId];
+              }
+            }
+          });
+        },
+        {
+          // Trigger when at least 50% of the section is visible
+          threshold: 0.5,
+        },
+      );
+
+      // 4. Start observing each section
+      sections.forEach((section) => {
+        observer.observe(section);
+      });
+
+      // 5. Scroll Progress Bar Logic
+      const progressBar = document.getElementById("progress-bar");
+
+      window.addEventListener("scroll", () => {
+        // Calculate the total scrollable distance
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollHeight =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+
+        // Calculate percentage (avoid division by 0)
+        const scrollPercentage =
+          scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+
+        // Update the width of the progress bar
+        progressBar.style.width = scrollPercentage + "%";
+      });
+
+      // 6. Single Element Observer Demo (for Section 3)
+      // This serves as an excellent reference for observing a single animated element!
+      const helloMessage = document.getElementById("hello-message");
+
+      const singleObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Animate it IN by removing the initial offset and opacity
+              helloMessage.classList.remove("opacity-0", "translate-y-16");
+              helloMessage.classList.add("opacity-100", "translate-y-0");
+
+              // Optional: uncomment the line below to only animate it ONCE
+              // singleObserver.unobserve(helloMessage);
+            } else {
+              // Animate it OUT so it repeats every time you scroll past it
+              helloMessage.classList.remove("opacity-100", "translate-y-0");
+              helloMessage.classList.add("opacity-0", "translate-y-16");
+            }
+          });
+        },
+        {
+          threshold: 0.5, // Triggers when 50% of the element's box is visible
+        },
+      );
+
+      // Start observing our single element!
+      if (helloMessage) {
+        singleObserver.observe(helloMessage);
+      }
+    </script>
+  </body>
+</html>
